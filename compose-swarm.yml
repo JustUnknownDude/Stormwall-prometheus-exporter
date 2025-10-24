@@ -1,0 +1,23 @@
+services:
+  stormwall-exporter:
+    image: stormwall-exporter:latest
+    ports:
+      - 9031:9031
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - stormwall-exporter-network
+    environment:
+      STORMWALL_API_KEY: "YOUR_API_KEY"
+      L3metrics: 'enable' #Если каких-то услуг нет надо их выключить
+      L7metrics: 'enable'
+      Attacks_metrics: 'enable'
+      L3network_serviceId: '20000' # ID ваших сервисов L3 нетворк (см. в адресной строке браузера в ссылке в ЛК Штормвола при переходе на услугу)
+      L3service_serviceId: '20001' # ID ваших сервисов L3 сервис
+      L7serviceId: "20003,20004" # ID ваших сервисов L7
+networks:
+  stormwall-exporter-network:
+    driver: overlay
